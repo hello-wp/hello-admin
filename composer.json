@@ -1,0 +1,16 @@
+{
+    "name": "hello-charts/hello-admin-pages",
+    "type": "wordpress-plugin",
+    "description": "Bring block editor content to the WordPress admin.",
+    "homepage": "https://github.com/hello-charts/hello-admin-pages",
+    "license": "GPL-2.0",
+    "require-dev": {
+        "wp-coding-standards/wpcs": "^2.3"
+    },
+    "require": {
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
+    },
+    "scripts": {
+      "post-install-cmd": "vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs,vendor/phpcompatibility/phpcompatibility-wp,vendor/phpcompatibility/php-compatibility,vendor/phpcompatibility/phpcompatibility-paragonie"
+    }
+}

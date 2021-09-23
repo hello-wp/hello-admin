@@ -1,0 +1,60 @@
+{
+  "name": "hello-admin-pages",
+  "title": "Hello Admin Pages",
+  "version": "1.0.0",
+  "description": "Bring block editor content to the WordPress admin.",
+  "author": "Hello WP",
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "block-editor",
+    "wordpress",
+    "wordpress-plugin"
+  ],
+  "homepage": "https://github.com/hello-charts/hello-admin-pages",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hello-charts/hello-admin-pages"
+  },
+  "bugs": {
+    "url": "https://github.com/hello-charts/hello-admin-pages/issues"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "@wordpress/eslint-plugin": "^9.0.4",
+    "@wordpress/scripts": "^15.0.1",
+    "babel-plugin-lodash": "^3.3.4",
+    "css-loader": "^5.2.4",
+    "ignore-emit-webpack-plugin": "^2.0.6",
+    "mini-css-extract-plugin": "^1.6.0",
+    "sass-loader": "^11.1.0",
+    "terser-webpack-plugin": "^3.1.0",
+    "webpack": "^5.37.0",
+    "webpack-cli": "^4.7.0"
+  },
+  "scripts": {
+    "check-licenses": "wp-scripts check-licenses --prod --gpl2",
+    "build": "wp-scripts build",
+    "dev": "wp-scripts start",
+    "env": "wp-env",
+    "lint": "npm run lint:js && npm run lint:php && npm run lint:pkg-json",
+    "lint:js": "wp-scripts lint-js js",
+    "lint:js:files": "wp-scripts lint-js",
+    "lint:js:fix": "npm run lint:js -- --fix",
+    "lint:pkg-json": "wp-scripts lint-pkg-json",
+    "lint:php": "vendor/bin/phpcs",
+    "lint:php:fix": "vendor/bin/phpcbf",
+    "packages-update": "wp-scripts packages-update",
+    "test:e2e": "wp-scripts test-e2e --config=tests/e2e/jest.config.js --runInBand",
+    "test:e2e:interactive": "npm run test:e2e -- --puppeteer-interactive",
+    "test:js": "wp-scripts test-unit-js --config=tests/js/jest.config.js",
+    "test:js:coverage": "npm run test:js -- --coverage --coverageDirectory=tests/coverage/js",
+    "test:js:watch": "npm run test:js -- --watch",
+    "package:clean": "rm -rf build && rm -rf package",
+    "package:mkdir": "mkdir -p package/hello-admin-pages",
+    "package:rsync": "rsync -av ./ package/hello-admin-pages/ --exclude=vendor --exclude=node_modules --exclude=package --exclude=\".git*\"",
+    "package:zip": "cd package && zip -r hello-admin-pages hello-admin-pages/ && rm -r hello-admin-pages/",
+    "package": "npm run package:clean && npm run build && npm run package:mkdir && npm run package:rsync && npm run package:zip"
+  }
+}

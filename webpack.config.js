@@ -10,6 +10,7 @@ module.exports = {
 	...defaultConfig,
 	entry: {
 		'./build/plugin': './js/index.js',
+		'./build/admin': './css/admin.scss',
 		'./build/editor': './css/editor.scss',
 	},
 	output: {
@@ -26,6 +27,12 @@ module.exports = {
 	optimization: {
 		splitChunks: {
 			cacheGroups: {
+				admin: {
+					name: 'admin',
+					test: /admin\.s?css$/,
+					chunks: 'all',
+					enforce: true,
+				},
 				editor: {
 					name: 'editor',
 					test: /editor\.s?css$/,
@@ -68,6 +75,6 @@ module.exports = {
 		new MiniCssExtractPlugin(
 			{ filename: './build/[name].css' }
 		),
-		new IgnoreEmitPlugin( [ 'editor.js' ] ),
+		new IgnoreEmitPlugin( [ 'editor.js', 'admin.js' ] ),
 	],
 };

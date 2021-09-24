@@ -31,7 +31,8 @@ class Admin_Menu {
 	 * @return void
 	 */
 	public function register_hooks() {
-		add_action( 'admin_menu', [ $this, 'register_menu_items' ], 99 );
+		add_action( 'admin_menu', [ $this, 'register_menu_items' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 	}
 
 	/**
@@ -68,6 +69,25 @@ class Admin_Menu {
 	}
 
 	/**
+	 * Enqueue admin assets.
+	 */
+	public function enqueue_admin_assets() {
+		if ( ! is_admin() ) {
+			return;
+		}
+
+		$version = hello_admin_pages_version();
+
+		// Enqueue block editor styles for backend.
+		wp_enqueue_style(
+			'hello-admin-pages-admin-css',
+			plugins_url( '/build/admin.css', dirname( __FILE__ ) ),
+			[],
+			$version
+		);
+	}
+
+	/**
 	 * Render the menu page.
 	 */
 	public function render_menu_page() {
@@ -81,14 +101,16 @@ class Admin_Menu {
 			]
 		)[0];
 
-		do_action( 'hello_admin_pages_pre_render_content' );
+		wp_enqueue_style( 'wp-block-library' );
+		wp_enqueue_style( 'wp-block-library-theme' );
 
+		do_action( 'hello_admin_pages_pre_render_content' );
 		$content = apply_filters( 'the_content', $post->post_content );
 		$content = apply_filters( 'hello_admin_page_content', $content );
 
-		echo '<div class="wrap">';
+		echo '<div class="wrap hello-admin-pages-wrap">';
 		echo '<h1>' . esc_html( get_the_title( $post->ID ) ) . '</h1>';
-		echo wp_kses_post( $content );
+		echo $content;
 		echo '</div>';
 
 		do_action( 'hello_admin_pages_post_render_content' );

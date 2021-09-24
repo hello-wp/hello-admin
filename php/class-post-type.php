@@ -40,12 +40,12 @@ class Post_Type {
 	public function register_hooks() {
 		add_action( 'init', [ $this, 'register_post_type' ] );
 		add_action( 'init', [ $this, 'register_post_meta' ] );
-		add_action( 'admin_init', [ $this, 'add_caps' ] );
 		add_action( 'enqueue_block_editor_assets', [ $this, 'enqueue_editor_assets' ] );
-		add_action( 'after_setup_theme', [ $this, 'add_editor_color_palette' ], 100 );
-		add_action( 'enqueue_block_editor_assets', [ $this, 'dequeue_theme_assets' ], 99 );
-		add_action( 'after_setup_theme', [ $this, 'dequeue_block_styles' ], 99 );
-		add_action( 'after_setup_theme', [ $this, 'dequeue_editor_styles' ], 99 );
+		add_action( 'admin_init', [ $this, 'add_caps' ] );
+		add_action( 'admin_init', [ $this, 'dequeue_theme_assets' ], 99 );
+		add_action( 'admin_init', [ $this, 'dequeue_block_styles' ], 99 );
+		add_action( 'admin_init', [ $this, 'dequeue_editor_styles' ], 99 );
+		add_action( 'admin_init', [ $this, 'add_editor_color_palette' ], 100 );
 	}
 
 	/**
@@ -218,15 +218,7 @@ class Post_Type {
 	 * Dequeue block styles.
 	 */
 	public function dequeue_block_styles() {
-		global $post;
-
-		// Only load when editing a post.
-		if ( ! $post ) {
-			return;
-		}
-
-		// Only load for this post type.
-		if ( $post->post_type !== $this->slug ) {
+		if ( ! $this->is_current_post_type() ) {
 			return;
 		}
 
@@ -236,12 +228,22 @@ class Post_Type {
 				$block_styles->unregister( $block_name, $block_style_name );
 			}
 		}
+
+		// Remove support for Block Styles.
+		remove_theme_support( 'wp-block-styles' );
+
+		// Remove support for full and wide align images.
+		remove_theme_support( 'align-wide' );
 	}
 
 	/**
 	 * Add editor color palette.
 	 */
 	public function add_editor_color_palette() {
+		if ( ! $this->is_current_post_type() ) {
+			return;
+		}
+
 		// Editor color palette.
 		$black        = '#101517';
 		$gray         = '#646970';

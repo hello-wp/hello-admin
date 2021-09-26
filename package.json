@@ -1,6 +1,6 @@
 {
-  "name": "hello-admin-pages",
-  "title": "Hello Admin Pages",
+  "name": "hello-admin",
+  "title": "Hello Admin",
   "version": "1.0.0",
   "description": "Bring block editor content to the WordPress admin.",
   "author": "Hello WP",
@@ -11,13 +11,13 @@
     "wordpress",
     "wordpress-plugin"
   ],
-  "homepage": "https://github.com/hello-charts/hello-admin-pages",
+  "homepage": "https://github.com/hello-charts/hello-admin",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hello-charts/hello-admin-pages"
+    "url": "https://github.com/hello-charts/hello-admin"
   },
   "bugs": {
-    "url": "https://github.com/hello-charts/hello-admin-pages/issues"
+    "url": "https://github.com/hello-charts/hello-admin/issues"
   },
   "dependencies": {
   },
@@ -52,9 +52,9 @@
     "test:js:coverage": "npm run test:js -- --coverage --coverageDirectory=tests/coverage/js",
     "test:js:watch": "npm run test:js -- --watch",
     "package:clean": "rm -rf build && rm -rf package",
-    "package:mkdir": "mkdir -p package/hello-admin-pages",
-    "package:rsync": "rsync -av ./ package/hello-admin-pages/ --exclude=vendor --exclude=node_modules --exclude=package --exclude=\".git*\"",
-    "package:zip": "cd package && zip -r hello-admin-pages hello-admin-pages/ && rm -r hello-admin-pages/",
+    "package:mkdir": "mkdir -p package/hello-admin",
+    "package:rsync": "rsync -av ./ package/hello-admin/ --exclude=vendor --exclude=node_modules --exclude=package --exclude=\".git*\"",
+    "package:zip": "cd package && zip -r hello-admin hello-admin/ && rm -r hello-admin/",
     "package": "npm run package:clean && npm run build && npm run package:mkdir && npm run package:rsync && npm run package:zip"
   }
 }

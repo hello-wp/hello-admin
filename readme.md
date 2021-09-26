@@ -1,4 +1,4 @@
-# Hello Admin Pages
+# Hello Admin
 **Bring block editor content to the WordPress admin.**
 
 ## License

@@ -2,13 +2,13 @@
 /**
  * Register admin menu items.
  *
- * @package Hello_Admin_Pages
+ * @package Hello_Admin
  */
 
-namespace Hello_Admin_Pages;
+namespace Hello_Admin;
 
 /**
- * Class Post_Type.
+ * Class Admin_Menu.
  */
 class Admin_Menu {
 	/**
@@ -42,7 +42,7 @@ class Admin_Menu {
 		$admin_pages_query = new \WP_Query(
 			[
 				'posts_per_page' => 99,
-				'post_type'      => hello_admin_pages()->post_type->slug,
+				'post_type'      => hello_admin()->post_type->slug,
 			]
 		);
 
@@ -50,7 +50,7 @@ class Admin_Menu {
 			$admin_pages_query->the_post();
 			$menu_position = get_post_meta(
 				get_the_ID(),
-				hello_admin_pages()->post_type->menu_position_key,
+				hello_admin()->post_type->menu_position_key,
 				true
 			);
 
@@ -76,11 +76,11 @@ class Admin_Menu {
 			return;
 		}
 
-		$version = hello_admin_pages_version();
+		$version = hello_admin_version();
 
 		// Enqueue block editor styles for backend.
 		wp_enqueue_style(
-			'hello-admin-pages-admin-css',
+			'hello-admin-css',
 			plugins_url( '/build/admin.css', dirname( __FILE__ ) ),
 			[],
 			$version
@@ -96,7 +96,7 @@ class Admin_Menu {
 		$post = get_posts(
 			[
 				'name'           => $slug,
-				'post_type'      => hello_admin_pages()->post_type->slug,
+				'post_type'      => hello_admin()->post_type->slug,
 				'posts_per_page' => 1,
 			]
 		)[0];
@@ -104,15 +104,15 @@ class Admin_Menu {
 		wp_enqueue_style( 'wp-block-library' );
 		wp_enqueue_style( 'wp-block-library-theme' );
 
-		do_action( 'hello_admin_pages_pre_render_content' );
+		do_action( 'hello_admin_pre_render_content' );
 		$content = apply_filters( 'the_content', $post->post_content );
 		$content = apply_filters( 'hello_admin_page_content', $content );
 
-		echo '<div class="wrap hello-admin-pages-wrap">';
+		echo '<div class="wrap hello-admin-wrap">';
 		echo '<h1>' . esc_html( get_the_title( $post->ID ) ) . '</h1>';
 		echo $content;
 		echo '</div>';
 
-		do_action( 'hello_admin_pages_post_render_content' );
+		do_action( 'hello_admin_post_render_content' );
 	}
 }

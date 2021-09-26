@@ -2,10 +2,10 @@
 /**
  * Register the Admin Pages custom post type.
  *
- * @package Hello_Admin_Pages
+ * @package Hello_Admin
  */
 
-namespace Hello_Admin_Pages;
+namespace Hello_Admin;
 
 /**
  * Class Post_Type.
@@ -53,20 +53,20 @@ class Post_Type {
 	 */
 	public function register_post_type() {
 		$labels = [
-			'name'               => _x( 'Admin Pages', 'post type general name', 'hello-admin-pages' ),
-			'singular_name'      => _x( 'Admin Page', 'post type singular name', 'hello-admin-pages' ),
-			'menu_name'          => _x( 'Admin Pages', 'admin menu', 'hello-admin-pages' ),
-			'name_admin_bar'     => _x( 'Admin Page', 'add new on admin bar', 'hello-admin-pages' ),
-			'add_new'            => _x( 'Add New', 'block', 'hello-admin-pages' ),
-			'add_new_item'       => __( 'Add New Admin Page', 'hello-admin-pages' ),
-			'new_item'           => __( 'New Admin Page', 'hello-admin-pages' ),
-			'edit_item'          => __( 'Edit Admin Page', 'hello-admin-pages' ),
-			'view_item'          => __( 'View Admin Page', 'hello-admin-pages' ),
-			'all_items'          => __( 'All Admin Pages', 'hello-admin-pages' ),
-			'search_items'       => __( 'Search Admin Pages', 'hello-admin-pages' ),
-			'parent_item_colon'  => __( 'Parent Admin Pages:', 'hello-admin-pages' ),
-			'not_found'          => __( 'No admin pages found.', 'hello-admin-pages' ),
-			'not_found_in_trash' => __( 'No admin pages found in Trash.', 'hello-admin-pages' ),
+			'name'               => _x( 'Admin Pages', 'post type general name', 'hello-admin' ),
+			'singular_name'      => _x( 'Admin Page', 'post type singular name', 'hello-admin' ),
+			'menu_name'          => _x( 'Admin Pages', 'admin menu', 'hello-admin' ),
+			'name_admin_bar'     => _x( 'Admin Page', 'add new on admin bar', 'hello-admin' ),
+			'add_new'            => _x( 'Add New', 'block', 'hello-admin' ),
+			'add_new_item'       => __( 'Add New Admin Page', 'hello-admin' ),
+			'new_item'           => __( 'New Admin Page', 'hello-admin' ),
+			'edit_item'          => __( 'Edit Admin Page', 'hello-admin' ),
+			'view_item'          => __( 'View Admin Page', 'hello-admin' ),
+			'all_items'          => __( 'All Admin Pages', 'hello-admin' ),
+			'search_items'       => __( 'Search Admin Pages', 'hello-admin' ),
+			'parent_item_colon'  => __( 'Parent Admin Pages:', 'hello-admin' ),
+			'not_found'          => __( 'No admin pages found.', 'hello-admin' ),
+			'not_found_in_trash' => __( 'No admin pages found in Trash.', 'hello-admin' ),
 		];
 
 		$args = [
@@ -163,11 +163,11 @@ class Post_Type {
 			return;
 		}
 
-		$version = hello_admin_pages_version();
+		$version = hello_admin_version();
 
 		// Enqueue block editor styles for backend.
 		wp_enqueue_style(
-			'hello-admin-pages-editor-css',
+			'hello-admin-editor-css',
 			plugins_url( '/build/editor.css', dirname( __FILE__ ) ),
 			[],
 			$version
@@ -175,7 +175,7 @@ class Post_Type {
 
 		// Enqueue block editor script.
 		wp_enqueue_script(
-			'hello-admin-pages-js',
+			'hello-admin-js',
 			plugins_url( '/build/plugin.js', dirname( __FILE__ ) ),
 			[ 'wp-edit-post', 'wp-element', 'wp-components', 'wp-plugins', 'wp-data' ],
 			$version,
@@ -260,52 +260,52 @@ class Post_Type {
 			'editor-color-palette',
 			[
 				[
-					'name'  => esc_html__( 'Blue', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Blue', 'hello-admin' ),
 					'slug'  => 'blue',
 					'color' => $blue,
 				],
 				[
-					'name'  => esc_html__( 'Red', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Red', 'hello-admin' ),
 					'slug'  => 'red',
 					'color' => $red,
 				],
 				[
-					'name'  => esc_html__( 'Yellow', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Yellow', 'hello-admin' ),
 					'slug'  => 'yellow',
 					'color' => $yellow,
 				],
 				[
-					'name'  => esc_html__( 'Light Blue', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Light Blue', 'hello-admin' ),
 					'slug'  => 'light-blue',
 					'color' => $light_blue,
 				],
 				[
-					'name'  => esc_html__( 'Light Red', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Light Red', 'hello-admin' ),
 					'slug'  => 'light-red',
 					'color' => $light_red,
 				],
 				[
-					'name'  => esc_html__( 'Light Yellow', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Light Yellow', 'hello-admin' ),
 					'slug'  => 'yellow',
 					'color' => $light_yellow,
 				],
 				[
-					'name'  => esc_html__( 'Black', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Black', 'hello-admin' ),
 					'slug'  => 'black',
 					'color' => $black,
 				],
 				[
-					'name'  => esc_html__( 'Gray', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Gray', 'hello-admin' ),
 					'slug'  => 'gray',
 					'color' => $gray,
 				],
 				[
-					'name'  => esc_html__( 'Light Gray', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'Light Gray', 'hello-admin' ),
 					'slug'  => 'light-gray',
 					'color' => $light_gray,
 				],
 				[
-					'name'  => esc_html__( 'White', 'hello-admin-pages' ),
+					'name'  => esc_html__( 'White', 'hello-admin' ),
 					'slug'  => 'white',
 					'color' => $white,
 				],

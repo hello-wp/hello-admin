@@ -1,8 +1,8 @@
 {
-    "name": "hello-charts/hello-admin-pages",
+    "name": "hello-charts/hello-admin",
     "type": "wordpress-plugin",
     "description": "Bring block editor content to the WordPress admin.",
-    "homepage": "https://github.com/hello-charts/hello-admin-pages",
+    "homepage": "https://github.com/hello-charts/hello-admin",
     "license": "GPL-2.0",
     "require-dev": {
         "wp-coding-standards/wpcs": "^2.3"

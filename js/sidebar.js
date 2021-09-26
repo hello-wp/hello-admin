@@ -40,17 +40,17 @@
 		);
 	} );
 
-	registerPlugin( 'admin-pages-menu-panel', {
+	registerPlugin( 'hello-admin-menu-panel', {
 		render() {
 			return (
 				<PluginDocumentSettingPanel
-					name="admin-pages-menu-panel"
+					name="hello-admin-menu-panel"
 					title={ __( 'Admin Menu' ) }
 					icon={ icon }
 				>
 					<MetaTextControl
 						type="number"
-						label={ __( 'Menu Position', 'hello-admin-pages' ) }
+						label={ __( 'Menu Position', 'hello-admin' ) }
 						metaKey="menu_position"
 					/>
 				</PluginDocumentSettingPanel>

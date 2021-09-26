@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: Hello Admin Pages
- * Plugin URI: https://github.com/hello-charts/hello-admin-pages/
+ * Plugin Name: Hello Admin
+ * Plugin URI: https://github.com/hello-charts/hello-admin/
  * Description: Bring block editor content to the WordPress admin.
  * Author: Hello WP
  * Author URI: https://github.com/hello-charts/
@@ -9,10 +9,10 @@
  * License: GPL2+
  * License URI: https://www.gnu.org/licenses/gpl-2.0.txt
  *
- * @package Hello_Admin_Pages
+ * @package Hello_Admin
  */
 
-use Hello_Admin_Pages\Plugin;
+use Hello_Admin\Plugin;
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
@@ -27,7 +27,7 @@ require_once 'php/autoloader.php';
  *
  * @return string
  */
-function hello_admin_pages_version(): string {
+function hello_admin_version(): string {
 	return '1.0.0';
 }
 
@@ -36,7 +36,7 @@ function hello_admin_pages_version(): string {
  *
  * @return Plugin
  */
-function hello_admin_pages(): Plugin {
+function hello_admin(): Plugin {
 	static $instance;
 
 	if ( null === $instance ) {
@@ -46,4 +46,4 @@ function hello_admin_pages(): Plugin {
 	return $instance;
 }
 
-hello_admin_pages();
+hello_admin();

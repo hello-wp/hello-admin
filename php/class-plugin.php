@@ -2,10 +2,10 @@
 /**
  * Primary plugin file.
  *
- * @package Hello_Admin_Pages
+ * @package Hello_Admin
  */
 
-namespace Hello_Admin_Pages;
+namespace Hello_Admin;
 
 /**
  * Class Plugin.

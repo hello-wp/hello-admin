@@ -2,7 +2,7 @@
 /**
  * Plugin Autoloader
  *
- * @package   Hello_Admin_Pages
+ * @package   Hello_Admin
  */
 
 /**
@@ -15,7 +15,7 @@ spl_autoload_register(
 		$root      = array_shift( $namespace );
 
 		// If we're not in the plugin's namespace then just return.
-		if ( 'Hello_Admin_Pages' !== $root ) {
+		if ( 'Hello_Admin' !== $root ) {
 			return;
 		}
 

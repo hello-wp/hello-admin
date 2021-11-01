@@ -26,6 +26,20 @@ class Post_Type {
 	public $menu_position_key = 'menu_position';
 
 	/**
+	 * Sub menu meta key.
+	 *
+	 * @var string
+	 */
+	public $sub_menu_key = 'sub_menu';
+
+	/**
+	 * Menu parent meta key.
+	 *
+	 * @var string
+	 */
+	public $menu_parent_key = 'menu_parent';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -46,6 +60,8 @@ class Post_Type {
 		add_action( 'admin_init', [ $this, 'dequeue_block_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'dequeue_editor_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'add_editor_color_palette' ], 100 );
+		add_action( 'save_post', [ $this, 'add_default_sub_menu_meta_to_post' ], 10, 2 );
+		add_filter( 'rest_admin-page_query', [ $this, 'admin_page_sub_menu_query' ], 10, 2 );
 	}
 
 	/**
@@ -100,6 +116,29 @@ class Post_Type {
 				'type'           => 'integer',
 				'single'         => true,
 				'show_in_rest'   => true,
+			]
+		);
+
+		register_meta(
+			'post',
+			'menu_parent',
+			[
+				'object_subtype' => $this->slug,
+				'type'           => 'integer',
+				'single'         => true,
+				'show_in_rest'   => true,
+			]
+		);
+
+		register_meta(
+			'post',
+			'sub_menu',
+			[
+				'object_subtype' => $this->slug,
+				'type'           => 'boolean',
+				'single'         => true,
+				'show_in_rest'   => true,
+				'default'        => 0,
 			]
 		);
 	}
@@ -311,5 +350,38 @@ class Post_Type {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Admin page post meta query.
+	 *
+	 * @param array  $args    filter args.
+	 * @param object $request filter request.
+	 * @return $args
+	 */
+	public function admin_page_sub_menu_query( $args, $request ) {
+		$meta_key = $request->get_param( 'metaKey' );
+		if ( $meta_key ) {
+			$args['meta_key']   = $meta_key;
+			$args['meta_value'] = $request->get_param( 'metaValue' );
+		}
+		return $args;
+	}
+
+	/**
+	 * Add default value to sub menu meta.
+	 *
+	 * @param integer $post_id  filter args.
+	 * @param object  $post     filter request.
+	 */
+	public function add_default_sub_menu_meta_to_post( $post_id, $post ) {
+		if ( $post->post_type !== $this->slug ) {
+			return;
+		}
+
+		$value = get_post_meta( $post_id, $this->sub_menu_key, true );
+		if ( 0 === $value ) {
+			update_post_meta( $post_id, $this->sub_menu_key, 0 );
+		}
 	}
 }

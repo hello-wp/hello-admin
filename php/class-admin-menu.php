@@ -43,6 +43,9 @@ class Admin_Menu {
 			[
 				'posts_per_page' => 99,
 				'post_type'      => hello_admin()->post_type->slug,
+				'meta_key'       => 'sub_menu',
+				'orderby'        => 'meta_value_num',
+				'order'          => 'ASC',
 			]
 		);
 
@@ -54,15 +57,49 @@ class Admin_Menu {
 				true
 			);
 
-			add_menu_page(
-				get_the_title(),
-				get_the_title(),
-				'read',
-				$this->prefix . get_post_field( 'post_name' ),
-				[ $this, 'render_menu_page' ],
-				'',
-				$menu_position
+			$sub_menu = get_post_meta(
+				get_the_ID(),
+				hello_admin()->post_type->sub_menu_key,
+				true
 			);
+
+			if ( '' === $sub_menu ) {
+				update_post_meta( get_the_ID(), hello_admin()->post_type->sub_menu_key, 0 );
+			}
+
+			$title     = get_the_title();
+			$menu_slug = $this->prefix . get_post_field( 'post_name' );
+
+			if ( ! $sub_menu ) {
+				add_menu_page(
+					$title,
+					$title,
+					'read',
+					$menu_slug,
+					[ $this, 'render_menu_page' ],
+					'',
+					$menu_position
+				);
+			} else {
+				$menu_parent = get_post_meta(
+					get_the_ID(),
+					hello_admin()->post_type->menu_parent_key,
+					true
+				);
+
+				$parent_slug = $this->prefix . get_post_field( 'post_name', $menu_parent );
+
+				add_submenu_page(
+					$parent_slug,
+					$title,
+					$title,
+					'read',
+					$menu_slug,
+					[ $this, 'render_menu_page' ],
+					'',
+					$menu_position
+				);
+			}
 		}
 
 		wp_reset_postdata();
@@ -91,8 +128,8 @@ class Admin_Menu {
 	 * Render the menu page.
 	 */
 	public function render_menu_page() {
-		global $current_screen;
-		$slug = substr( $current_screen->parent_base, strlen( $this->prefix ) );
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		$slug = substr( $page, strlen( $this->prefix ) );
 		$post = get_posts(
 			[
 				'name'           => $slug,
@@ -110,7 +147,7 @@ class Admin_Menu {
 
 		echo '<div class="wrap hello-admin-wrap">';
 		echo '<h1>' . esc_html( get_the_title( $post->ID ) ) . '</h1>';
-		echo $content;
+		echo wp_kses_post( $content );
 		echo '</div>';
 
 		do_action( 'hello_admin_post_render_content' );

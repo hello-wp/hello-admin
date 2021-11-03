@@ -51,7 +51,7 @@ class Admin_Menu {
 
 		while ( $admin_pages_query->have_posts() ) {
 			$admin_pages_query->the_post();
-			$menu_position = get_post_meta(
+			$menu_position = (int) get_post_meta(
 				get_the_ID(),
 				hello_admin()->post_type->menu_position_key,
 				true
@@ -96,7 +96,6 @@ class Admin_Menu {
 					'read',
 					$menu_slug,
 					[ $this, 'render_menu_page' ],
-					'',
 					$menu_position
 				);
 			}

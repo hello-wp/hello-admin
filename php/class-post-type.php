@@ -37,7 +37,7 @@ class Post_Type {
 	 *
 	 * @var string
 	 */
-	public $menu_parent_key = 'menu_parent';
+	public $parent_menu_key = 'parent_menu';
 
 	/**
 	 * Plugin constructor.
@@ -62,6 +62,32 @@ class Post_Type {
 		add_action( 'admin_init', [ $this, 'add_editor_color_palette' ], 100 );
 		add_action( 'save_post', [ $this, 'add_default_sub_menu_meta_to_post' ], 10, 2 );
 		add_filter( 'rest_admin-page_query', [ $this, 'admin_page_sub_menu_query' ], 10, 2 );
+		add_action( 'rest_api_init', [ $this, 'register_custom_routes' ], 999 );
+	}
+
+	/**
+	 * Register custom routes.
+	 */
+	public function register_custom_routes() {
+		register_rest_route(
+			'hello-admin/v1',
+			'/menus',
+			[
+				'methods'  => 'GET',
+				'callback' => [ $this, 'return_all_registered_menus' ],
+			]
+		);
+	}
+
+	/**
+	 * Return all registered parent manus
+	 *
+	 * @return string|null All menues in json foorm.
+	 */
+	public function return_all_registered_menus() {
+		global $menu;
+
+		return wp_json_encode( $menu );
 	}
 
 	/**
@@ -121,7 +147,7 @@ class Post_Type {
 
 		register_meta(
 			'post',
-			'menu_parent',
+			'parent_menu',
 			[
 				'object_subtype' => $this->slug,
 				'type'           => 'integer',

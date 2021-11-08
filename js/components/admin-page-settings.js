@@ -9,9 +9,7 @@ const { withSelect, withDispatch } = wp.data;
 
 const icon = 'editor-ul';
 
-import MetaTextControl from './meta-text-control';
-import MetaSelectControl from './meta-select-control';
-import MetaToggleControl from './meta-toggle-control';
+import { MetaTextControl, MetaSelectControl, MetaToggleControl } from '.';
 
 const AdminPageSettings = function( props ) {
 	return (
@@ -34,12 +32,15 @@ const AdminPageSettings = function( props ) {
 				/>
 			</PanelRow>
 			{ props.postMeta.sub_menu &&
-				<PanelRow>
-					<MetaSelectControl
-						label={ __( 'Menu Parent', 'hello-admin' ) }
-						metaKey="menu_parent"
-					/>
-				</PanelRow>
+				<>
+					<PanelRow>
+						<MetaSelectControl
+							label={ __( 'Menu Parent', 'hello-admin' ) }
+							metaKey="parent_menu"
+							placeholder={ __( 'Select Parent Menu', 'hello-admin' ) }
+						/>
+					</PanelRow>
+				</>
 			}
 		</PluginDocumentSettingPanel>
 	);

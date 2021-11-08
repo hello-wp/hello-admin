@@ -5,6 +5,7 @@ const { __ } = wp.i18n;
 const { SelectControl } = wp.components;
 const { withSelect, withDispatch } = wp.data;
 const { compose } = wp.compose;
+const apiFetch = wp.apiFetch;
 
 const MetaSelectControl = compose(
 	withDispatch( function( dispatch, props ) {
@@ -24,24 +25,32 @@ const MetaSelectControl = compose(
 			metaKey: 'sub_menu',
 			metaValue: 0,
 		};
+
+		let primaryMenus;
+		apiFetch( { path: '/hello-admin/v1/menus' } ).then( ( menus ) => {
+			primaryMenus = menus;
+		} );
+
 		return {
 			metaValue: select( 'core/editor' ).getEditedPostAttribute( 'meta' )[ props.metaKey ],
 			adminPages: select( 'core' ).getEntityRecords( 'postType', 'admin-page', query ),
+			allPages: primaryMenus,
 		};
 	} )
 )( function( props ) {
-	const choices = [];
+	const options = [
+		{ value: -1, label: props.placeholder },
+	];
 	if ( props.adminPages ) {
-		choices.push( { value: 0, label: __( 'Select Parent Menu', 'hello-admin' ) } );
 		props.adminPages.forEach( ( post ) => {
-			choices.push( { value: post.id, label: post.title.rendered } );
+			options.push( { value: post.id, label: post.title.rendered } );
 		} );
 	} else {
-		choices.push( { value: 0, label: __( 'Loading', 'hello-admin' ) } );
+		options.push( { value: -1, label: __( 'Loading…', 'hello-admin' ), disabled: true } );
 	}
 	return (
 		<SelectControl
-			options={ choices }
+			options={ options }
 			label={ props.label }
 			value={ props.metaValue }
 			onChange={ ( value ) => {

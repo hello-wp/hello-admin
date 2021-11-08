@@ -70,24 +70,18 @@ class Admin_Menu {
 			$title     = get_the_title();
 			$menu_slug = $this->prefix . get_post_field( 'post_name' );
 
-			if ( ! $sub_menu ) {
-				add_menu_page(
-					$title,
-					$title,
-					'read',
-					$menu_slug,
-					[ $this, 'render_menu_page' ],
-					'',
-					$menu_position
-				);
-			} else {
-				$menu_parent = get_post_meta(
+			if ( $sub_menu ) {
+				$parent_menu = get_post_meta(
 					get_the_ID(),
-					hello_admin()->post_type->menu_parent_key,
+					hello_admin()->post_type->parent_menu_key,
 					true
 				);
 
-				$parent_slug = $this->prefix . get_post_field( 'post_name', $menu_parent );
+				$parent_slug = $this->prefix . get_post_field( 'post_name', $parent_menu );
+
+				if ( $menu_position < 1 ) {
+					$menu_position = 1;
+				}
 
 				add_submenu_page(
 					$parent_slug,
@@ -96,6 +90,16 @@ class Admin_Menu {
 					'read',
 					$menu_slug,
 					[ $this, 'render_menu_page' ],
+					$menu_position
+				);
+			} else {
+				add_menu_page(
+					$title,
+					$title,
+					'read',
+					$menu_slug,
+					[ $this, 'render_menu_page' ],
+					'',
 					$menu_position
 				);
 			}

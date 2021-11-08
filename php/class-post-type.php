@@ -40,6 +40,13 @@ class Post_Type {
 	public $parent_menu_key = 'parent_menu';
 
 	/**
+	 * User Roles meta key.
+	 *
+	 * @var string
+	 */
+	public $user_roles_key = 'user_roles';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -165,6 +172,24 @@ class Post_Type {
 				'single'         => true,
 				'show_in_rest'   => true,
 				'default'        => 0,
+			]
+		);
+
+		register_post_meta(
+			'post',
+			'user_roles',
+			[
+				'single'         => true,
+				'object_subtype' => $this->slug,
+				'type'           => 'array',
+				'show_in_rest'   => [
+					'schema' => [
+						'type'  => 'array',
+						'items' => [
+							'type' => 'string',
+						],
+					],
+				],
 			]
 		);
 	}

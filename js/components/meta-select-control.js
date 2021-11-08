@@ -38,13 +38,22 @@ const MetaSelectControl = compose(
 		};
 	} )
 )( function( props ) {
-	const options = [
+	let options = [
 		{ value: -1, label: props.placeholder },
 	];
-	if ( props.adminPages ) {
+	if ( props.adminPages && props.getAdminPages ) {
 		props.adminPages.forEach( ( post ) => {
 			options.push( { value: post.id, label: post.title.rendered } );
 		} );
+	} else if ( props.getUserRoles ) {
+		options = [
+			{ value: 'all', label: props.placeholder },
+			{ value: 'administrator', label: 'Administrator' },
+			{ value: 'editor', label: 'Editor' },
+			{ value: 'author', label: 'Author' },
+			{ value: 'contributor', label: 'Contributor' },
+			{ value: 'subscriber', label: 'Subscriber' },
+		];
 	} else {
 		options.push( { value: -1, label: __( 'Loading…', 'hello-admin' ), disabled: true } );
 	}
@@ -56,6 +65,8 @@ const MetaSelectControl = compose(
 			onChange={ ( value ) => {
 				props.setMetaValue( value );
 			} }
+			multiple={ props.multiple ?? false }
+			help={ props.help ?? false }
 		/>
 	);
 } );

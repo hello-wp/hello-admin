@@ -38,10 +38,23 @@ const AdminPageSettings = function( props ) {
 							label={ __( 'Menu Parent', 'hello-admin' ) }
 							metaKey="parent_menu"
 							placeholder={ __( 'Select Parent Menu', 'hello-admin' ) }
+							getAdminPages={ true }
 						/>
 					</PanelRow>
 				</>
 			}
+			<PanelRow>
+				<div className="hello-admin-select-multiple">
+					<MetaSelectControl
+						label={ __( 'User Roles', 'hello-admin' ) }
+						metaKey="user_roles"
+						placeholder="All User Roles"
+						help="Choose which user roles should see this admin page"
+						multiple={ true }
+						getUserRoles={ true }
+					/>
+				</div>
+			</PanelRow>
 		</PluginDocumentSettingPanel>
 	);
 };

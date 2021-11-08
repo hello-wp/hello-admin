@@ -51,6 +51,19 @@ class Admin_Menu {
 
 		while ( $admin_pages_query->have_posts() ) {
 			$admin_pages_query->the_post();
+
+			$user = wp_get_current_user();
+
+			$allowed_roles = get_post_meta(
+				get_the_ID(),
+				hello_admin()->post_type->user_roles_key,
+				true
+			);
+
+			if ( '' !== $allowed_roles && ! array_intersect( $allowed_roles, $user->roles ) ) {
+				continue;
+			}
+
 			$menu_position = (int) get_post_meta(
 				get_the_ID(),
 				hello_admin()->post_type->menu_position_key,

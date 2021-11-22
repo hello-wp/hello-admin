@@ -82,12 +82,11 @@ class Post_Type {
 	/**
 	 * Return all registered parent manus
 	 *
-	 * @return string|null All menues in json foorm.
+	 * @return string All menus as JSON.
 	 */
-	public function return_all_registered_menus() {
-		global $menu;
-
-		return wp_json_encode( $menu );
+	public function return_all_registered_menus(): ?string {
+		$menu = (array) get_transient( hello_admin()->admin_menu::MENU_OPTION_KEY );
+		return wp_send_json_success( $menu );
 	}
 
 	/**
@@ -381,11 +380,12 @@ class Post_Type {
 	/**
 	 * Admin page post meta query.
 	 *
-	 * @param array  $args    filter args.
-	 * @param object $request filter request.
-	 * @return $args
+	 * @param array $args    Filter args.
+	 * @param object $request Filter request.
+	 *
+	 * @return array
 	 */
-	public function admin_page_sub_menu_query( $args, $request ) {
+	public function admin_page_sub_menu_query( array $args, $request ): array {
 		$meta_key = $request->get_param( 'metaKey' );
 		if ( $meta_key ) {
 			$args['meta_key']   = $meta_key;
@@ -397,10 +397,10 @@ class Post_Type {
 	/**
 	 * Add default value to sub menu meta.
 	 *
-	 * @param integer $post_id  filter args.
-	 * @param object  $post     filter request.
+	 * @param integer $post_id Filter args.
+	 * @param object  $post    Filter request.
 	 */
-	public function add_default_sub_menu_meta_to_post( $post_id, $post ) {
+	public function add_default_sub_menu_meta_to_post( int $post_id, $post ) {
 		if ( $post->post_type !== $this->slug ) {
 			return;
 		}

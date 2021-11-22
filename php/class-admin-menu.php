@@ -19,6 +19,13 @@ class Admin_Menu {
 	public $prefix = 'admin-page-';
 
 	/**
+	 * The option key used to save all menu items into a transient.
+	 *
+	 * @var string
+	 */
+	const MENU_OPTION_KEY = 'hello-admin-all-menu-items';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -33,6 +40,7 @@ class Admin_Menu {
 	public function register_hooks() {
 		add_action( 'admin_menu', [ $this, 'register_menu_items' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
+		add_action( 'admin_menu', [ $this, 'save_all_menu_items' ], 99 );
 	}
 
 	/**
@@ -106,6 +114,11 @@ class Admin_Menu {
 		}
 
 		wp_reset_postdata();
+	}
+
+	public function save_all_menu_items() {
+		global $menu;
+		set_transient( self::MENU_OPTION_KEY, $menu );
 	}
 
 	/**

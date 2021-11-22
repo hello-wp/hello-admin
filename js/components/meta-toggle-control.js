@@ -2,32 +2,21 @@
  * WordPress dependencies.
  */
 const { ToggleControl } = wp.components;
-const { withSelect, withDispatch } = wp.data;
-const { compose } = wp.compose;
+const { useSelect, useDispatch } = wp.data;
 
-const MetaToggleControl = compose(
-	withDispatch( function( dispatch, props ) {
+const MetaToggleControl = ( function( props ) {
+	const { postMeta } = useSelect( ( select ) => {
 		return {
-			setMetaValue( value ) {
-				dispatch( 'core/editor' ).editPost( {
-					meta: { [ props.metaKey ]: value },
-				} );
-			},
+			postMeta: select( 'core/editor' ).getEditedPostAttribute( 'meta' ),
 		};
-	} ),
-	withSelect( function( select, props ) {
-		return {
-			metaValue: select( 'core/editor' ).getEditedPostAttribute( 'meta' )[ props.metaKey ],
-		};
-	} )
-)( function( props ) {
+	} );
+
+	const { editPost } = useDispatch( 'core/editor', [ props.metaKey ] );
 	return (
 		<ToggleControl
 			label={ props.label }
-			checked={ props.metaValue }
-			onChange={ ( value ) => {
-				props.setMetaValue( value );
-			} }
+			checked={ postMeta[ props.metaKey ] }
+			onChange={ ( value ) => editPost( { meta: { [ props.metaKey ]: value } } ) }
 		/>
 	);
 } );

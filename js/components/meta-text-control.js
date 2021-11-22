@@ -2,33 +2,23 @@
  * WordPress dependencies.
  */
 const { TextControl } = wp.components;
-const { withSelect, withDispatch } = wp.data;
-const { compose } = wp.compose;
+const { useSelect, useDispatch } = wp.data;
 
-const MetaTextControl = compose(
-	withDispatch( function( dispatch, props ) {
+const MetaTextControl = ( function( props ) {
+	const { postMeta } = useSelect( ( select ) => {
 		return {
-			setMetaValue( value ) {
-				dispatch( 'core/editor' ).editPost( {
-					meta: { [ props.metaKey ]: value },
-				} );
-			},
+			postMeta: select( 'core/editor' ).getEditedPostAttribute( 'meta' ),
 		};
-	} ),
-	withSelect( function( select, props ) {
-		return {
-			metaValue: select( 'core/editor' ).getEditedPostAttribute( 'meta' )[ props.metaKey ],
-		};
-	} )
-)( function( props ) {
+	} );
+
+	const { editPost } = useDispatch( 'core/editor', [ props.metaKey ] );
+
 	return (
 		<TextControl
 			type={ props.type }
 			label={ props.label }
-			value={ props.metaValue }
-			onChange={ ( value ) => {
-				props.setMetaValue( value );
-			} }
+			value={ postMeta[ props.metaKey ] }
+			onChange={ ( value ) => editPost( { meta: { [ props.metaKey ]: value } } ) }
 		/>
 	);
 } );

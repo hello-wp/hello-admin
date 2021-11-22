@@ -60,7 +60,6 @@ class Post_Type {
 		add_action( 'admin_init', [ $this, 'dequeue_block_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'dequeue_editor_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'add_editor_color_palette' ], 100 );
-		add_action( 'save_post', [ $this, 'add_default_sub_menu_meta_to_post' ], 10, 2 );
 		add_filter( 'rest_admin-page_query', [ $this, 'admin_page_sub_menu_query' ], 10, 2 );
 		add_action( 'rest_api_init', [ $this, 'register_custom_routes' ], 999 );
 	}
@@ -149,7 +148,6 @@ class Post_Type {
 			'parent_menu',
 			[
 				'object_subtype' => $this->slug,
-				'type'           => 'integer',
 				'single'         => true,
 				'show_in_rest'   => true,
 			]
@@ -380,7 +378,7 @@ class Post_Type {
 	/**
 	 * Admin page post meta query.
 	 *
-	 * @param array $args    Filter args.
+	 * @param array  $args    Filter args.
 	 * @param object $request Filter request.
 	 *
 	 * @return array
@@ -392,22 +390,5 @@ class Post_Type {
 			$args['meta_value'] = $request->get_param( 'metaValue' );
 		}
 		return $args;
-	}
-
-	/**
-	 * Add default value to sub menu meta.
-	 *
-	 * @param integer $post_id Filter args.
-	 * @param object  $post    Filter request.
-	 */
-	public function add_default_sub_menu_meta_to_post( int $post_id, $post ) {
-		if ( $post->post_type !== $this->slug ) {
-			return;
-		}
-
-		$value = get_post_meta( $post_id, $this->sub_menu_key, true );
-		if ( 0 === $value ) {
-			update_post_meta( $post_id, $this->sub_menu_key, 0 );
-		}
 	}
 }

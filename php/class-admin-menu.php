@@ -47,6 +47,8 @@ class Admin_Menu {
 	 * Register the custom post type.
 	 */
 	public function register_menu_items() {
+		global $menu;
+
 		$admin_pages_query = new \WP_Query(
 			[
 				'posts_per_page' => 99,
@@ -85,7 +87,7 @@ class Admin_Menu {
 					true
 				);
 
-				$parent_slug = $this->prefix . get_post_field( 'post_name', $parent_menu );
+				$parent_slug = $menu[ $parent_menu ][2];
 
 				if ( $menu_position < 1 ) {
 					$menu_position = 1;
@@ -116,6 +118,9 @@ class Admin_Menu {
 		wp_reset_postdata();
 	}
 
+	/**
+	 * Add global $menu variable to transient.
+	 */
 	public function save_all_menu_items() {
 		global $menu;
 		set_transient( self::MENU_OPTION_KEY, $menu );

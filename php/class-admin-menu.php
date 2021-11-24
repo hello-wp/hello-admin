@@ -19,6 +19,13 @@ class Admin_Menu {
 	public $prefix = 'admin-page-';
 
 	/**
+	 * The option key used to save all menu items into a transient.
+	 *
+	 * @var string
+	 */
+	const MENU_OPTION_KEY = 'hello-admin-all-menu-items';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -33,39 +40,90 @@ class Admin_Menu {
 	public function register_hooks() {
 		add_action( 'admin_menu', [ $this, 'register_menu_items' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
+		add_action( 'admin_menu', [ $this, 'save_all_menu_items' ], 99 );
 	}
 
 	/**
 	 * Register the custom post type.
 	 */
 	public function register_menu_items() {
+		global $menu;
+
 		$admin_pages_query = new \WP_Query(
 			[
 				'posts_per_page' => 99,
 				'post_type'      => hello_admin()->post_type->slug,
+				'meta_key'       => 'sub_menu',
+				'orderby'        => 'meta_value_num',
+				'order'          => 'ASC',
 			]
 		);
 
 		while ( $admin_pages_query->have_posts() ) {
 			$admin_pages_query->the_post();
-			$menu_position = get_post_meta(
+			$menu_position = (int) get_post_meta(
 				get_the_ID(),
 				hello_admin()->post_type->menu_position_key,
 				true
 			);
 
-			add_menu_page(
-				get_the_title(),
-				get_the_title(),
-				'read',
-				$this->prefix . get_post_field( 'post_name' ),
-				[ $this, 'render_menu_page' ],
-				'',
-				$menu_position
+			$sub_menu = get_post_meta(
+				get_the_ID(),
+				hello_admin()->post_type->sub_menu_key,
+				true
 			);
+
+			if ( '' === $sub_menu ) {
+				update_post_meta( get_the_ID(), hello_admin()->post_type->sub_menu_key, 0 );
+			}
+
+			$title     = get_the_title();
+			$menu_slug = $this->prefix . get_post_field( 'post_name' );
+
+			if ( $sub_menu ) {
+				$parent_menu = get_post_meta(
+					get_the_ID(),
+					hello_admin()->post_type->parent_menu_key,
+					true
+				);
+
+				$parent_slug = $menu[ $parent_menu ][2];
+
+				if ( $menu_position < 1 ) {
+					$menu_position = 1;
+				}
+
+				add_submenu_page(
+					$parent_slug,
+					$title,
+					$title,
+					'read',
+					$menu_slug,
+					[ $this, 'render_menu_page' ],
+					$menu_position
+				);
+			} else {
+				add_menu_page(
+					$title,
+					$title,
+					'read',
+					$menu_slug,
+					[ $this, 'render_menu_page' ],
+					'',
+					$menu_position
+				);
+			}
 		}
 
 		wp_reset_postdata();
+	}
+
+	/**
+	 * Add global $menu variable to transient.
+	 */
+	public function save_all_menu_items() {
+		global $menu;
+		set_transient( self::MENU_OPTION_KEY, $menu );
 	}
 
 	/**
@@ -91,8 +149,8 @@ class Admin_Menu {
 	 * Render the menu page.
 	 */
 	public function render_menu_page() {
-		global $current_screen;
-		$slug = substr( $current_screen->parent_base, strlen( $this->prefix ) );
+		$page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
+		$slug = substr( $page, strlen( $this->prefix ) );
 		$post = get_posts(
 			[
 				'name'           => $slug,
@@ -110,7 +168,7 @@ class Admin_Menu {
 
 		echo '<div class="wrap hello-admin-wrap">';
 		echo '<h1>' . esc_html( get_the_title( $post->ID ) ) . '</h1>';
-		echo $content;
+		echo wp_kses_post( $content );
 		echo '</div>';
 
 		do_action( 'hello_admin_post_render_content' );

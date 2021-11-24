@@ -26,6 +26,20 @@ class Post_Type {
 	public $menu_position_key = 'menu_position';
 
 	/**
+	 * Sub menu meta key.
+	 *
+	 * @var string
+	 */
+	public $sub_menu_key = 'sub_menu';
+
+	/**
+	 * Menu parent meta key.
+	 *
+	 * @var string
+	 */
+	public $parent_menu_key = 'parent_menu';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -46,6 +60,31 @@ class Post_Type {
 		add_action( 'admin_init', [ $this, 'dequeue_block_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'dequeue_editor_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'add_editor_color_palette' ], 100 );
+		add_action( 'rest_api_init', [ $this, 'register_custom_routes' ], 999 );
+	}
+
+	/**
+	 * Register custom routes.
+	 */
+	public function register_custom_routes() {
+		register_rest_route(
+			'hello-admin/v1',
+			'/menus',
+			[
+				'methods'  => 'GET',
+				'callback' => [ $this, 'return_all_registered_menus' ],
+			]
+		);
+	}
+
+	/**
+	 * Return all registered parent manus
+	 *
+	 * @return string All menus as JSON.
+	 */
+	public function return_all_registered_menus(): ?string {
+		$menu = (array) get_transient( hello_admin()->admin_menu::MENU_OPTION_KEY );
+		return wp_send_json_success( $menu );
 	}
 
 	/**
@@ -100,6 +139,28 @@ class Post_Type {
 				'type'           => 'integer',
 				'single'         => true,
 				'show_in_rest'   => true,
+			]
+		);
+
+		register_meta(
+			'post',
+			'parent_menu',
+			[
+				'object_subtype' => $this->slug,
+				'single'         => true,
+				'show_in_rest'   => true,
+			]
+		);
+
+		register_meta(
+			'post',
+			'sub_menu',
+			[
+				'object_subtype' => $this->slug,
+				'type'           => 'boolean',
+				'single'         => true,
+				'show_in_rest'   => true,
+				'default'        => 0,
 			]
 		);
 	}

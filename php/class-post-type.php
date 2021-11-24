@@ -60,7 +60,6 @@ class Post_Type {
 		add_action( 'admin_init', [ $this, 'dequeue_block_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'dequeue_editor_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'add_editor_color_palette' ], 100 );
-		add_filter( 'rest_admin-page_query', [ $this, 'admin_page_sub_menu_query' ], 10, 2 );
 		add_action( 'rest_api_init', [ $this, 'register_custom_routes' ], 999 );
 	}
 
@@ -373,22 +372,5 @@ class Post_Type {
 				],
 			]
 		);
-	}
-
-	/**
-	 * Admin page post meta query.
-	 *
-	 * @param array  $args    Filter args.
-	 * @param object $request Filter request.
-	 *
-	 * @return array
-	 */
-	public function admin_page_sub_menu_query( array $args, $request ): array {
-		$meta_key = $request->get_param( 'metaKey' );
-		if ( $meta_key ) {
-			$args['meta_key']   = $meta_key;
-			$args['meta_value'] = $request->get_param( 'metaValue' );
-		}
-		return $args;
 	}
 }

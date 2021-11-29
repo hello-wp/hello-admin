@@ -19,6 +19,8 @@ const MetaSelectControl = ( function( props ) {
 			label={ props.label }
 			value={ postMeta[ props.metaKey ] }
 			onChange={ ( value ) => editPost( { meta: { [ props.metaKey ]: value } } ) }
+			multiple={ props.multiple ?? false }
+			help={ props.help ?? false }
 		/>
 	);
 } );

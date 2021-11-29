@@ -65,6 +65,24 @@ const AdminPageSettings = function() {
 				/>
 			</PanelRow>
 			<PanelRow>
+				<div className="hello-admin-select-multiple">
+					<MetaSelectControl
+						label={ __( 'User Roles', 'hello-admin' ) }
+						metaKey="user_roles"
+						help="Choose which user roles should see this admin page"
+						multiple={ true }
+						options={ [
+							{ value: null, label: __( 'Select User Roles', 'hello-admin' ), disabled: true },
+							{ value: 'administrator', label: __( 'Administrator', 'hello-admin' ) },
+							{ value: 'editor', label: __( 'Editor', 'hello-admin' ) },
+							{ value: 'author', label: __( 'Author', 'hello-admin' ) },
+							{ value: 'contributor', label: __( 'Contributor', 'hello-admin' ) },
+							{ value: 'subscriber', label: __( 'Subscriber', 'hello-admin' ) },
+						] }
+					/>
+				</div>
+			</PanelRow>
+			<PanelRow>
 				<MetaToggleControl
 					label={ __( 'Sub-Menu', 'hello-admin' ) }
 					metaKey="sub_menu"

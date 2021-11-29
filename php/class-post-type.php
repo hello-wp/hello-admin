@@ -40,6 +40,13 @@ class Post_Type {
 	public $parent_menu_key = 'parent_menu';
 
 	/**
+	 * User Roles meta key.
+	 *
+	 * @var string
+	 */
+	public $user_roles_key = 'user_roles';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -61,6 +68,7 @@ class Post_Type {
 		add_action( 'admin_init', [ $this, 'dequeue_editor_styles' ], 99 );
 		add_action( 'admin_init', [ $this, 'add_editor_color_palette' ], 100 );
 		add_action( 'rest_api_init', [ $this, 'register_custom_routes' ], 999 );
+		add_action( 'save_post', [ $this, 'add_default_sub_menu_meta_to_post' ], 10, 2 );
 	}
 
 	/**
@@ -161,6 +169,24 @@ class Post_Type {
 				'single'         => true,
 				'show_in_rest'   => true,
 				'default'        => 0,
+			]
+		);
+
+		register_meta(
+			'post',
+			'user_roles',
+			[
+				'single'         => true,
+				'object_subtype' => $this->slug,
+				'type'           => 'array',
+				'show_in_rest'   => [
+					'schema' => [
+						'type'  => 'array',
+						'items' => [
+							'type' => 'string',
+						],
+					],
+				],
 			]
 		);
 	}
@@ -372,5 +398,23 @@ class Post_Type {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Add default value to sub menu meta.
+	 *
+	 * @param integer $post_id Filter args.
+	 * @param object  $post    Filter request.
+	 */
+	public function add_default_sub_menu_meta_to_post( int $post_id, $post ) {
+		if ( $post->post_type !== $this->slug ) {
+			return;
+		}
+
+		// Returns 0 if not saved in database.
+		$value = get_post_meta( $post_id, $this->sub_menu_key, true );
+		if ( 0 === $value ) {
+			update_post_meta( $post_id, $this->sub_menu_key, 0 );
+		}
 	}
 }

@@ -10,7 +10,7 @@ const apiFetch = wp.apiFetch;
 
 const icon = 'editor-ul';
 
-import { MetaTextControl, MetaSelectControl, MetaToggleControl } from '.';
+import { MetaTextControl, MetaSelectControl, MetaToggleControl, IconSelector } from '.';
 
 const AdminPageSettings = function() {
 	const { postMeta } = useSelect( ( select ) => {
@@ -78,6 +78,13 @@ const AdminPageSettings = function() {
 							label={ __( 'Menu Parent', 'hello-admin' ) }
 							metaKey="parent_menu"
 						/>
+					</PanelRow>
+				</>
+			}
+			{ ! postMeta.sub_menu &&
+				<>
+					<PanelRow>
+						<IconSelector />
 					</PanelRow>
 				</>
 			}

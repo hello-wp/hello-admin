@@ -73,6 +73,14 @@ class Admin_Menu {
 				true
 			);
 
+			$menu_icon = get_post_meta(
+				get_the_ID(),
+				hello_admin()->post_type->menu_icon_key,
+				true
+			);
+
+			$icons = $this->get_icons();
+
 			if ( '' === $sub_menu ) {
 				update_post_meta( get_the_ID(), hello_admin()->post_type->sub_menu_key, 0 );
 			}
@@ -109,6 +117,8 @@ class Admin_Menu {
 					'read',
 					$menu_slug,
 					[ $this, 'render_menu_page' ],
+					$menu_icon ?
+					'data:image/svg+xml;base64,' . base64_encode( $icons[ $menu_icon ] ) :
 					'',
 					$menu_position
 				);
@@ -172,5 +182,29 @@ class Admin_Menu {
 		echo '</div>';
 
 		do_action( 'hello_admin_post_render_content' );
+	}
+
+	/**
+	 * Provides a list of all available menu icons.
+	 *
+	 * To include additional icons in this list, use the hello_admin_icons filter, and add a new svg string to the array,
+	 * using a unique key. For example:
+	 *
+	 * $icons['foo'] = '<svg>…</svg>';
+	 *
+	 * @return array
+	 */
+	public function get_icons() {
+		// This is on the local filesystem, so file_get_contents() is ok to use here.
+		$json_file = plugin_dir_path( __DIR__ ) . 'assets/icons.json';
+		$json      = file_get_contents( $json_file ); // @codingStandardsIgnoreLine
+		$icons     = json_decode( $json, true );
+
+		/**
+		 * The available menu icons.
+		 *
+		 * @param array $icons The available icons.
+		 */
+		return apply_filters( 'hello_admin_icons', $icons );
 	}
 }

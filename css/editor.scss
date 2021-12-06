@@ -114,3 +114,99 @@
 		font-size:13px
 	}
 }
+
+.hello-admin-icon-container label {
+	display: block;
+}
+
+#hello-admin-icon-current {
+	background: #ffffff;
+	border: 1px solid #cccccc;
+	border-right: 0;
+	border-radius: 3px 0 0 3px;
+	padding: 3px 6px;
+	margin-right: 0;
+	width: 24px;
+	height: 24px;
+	display: inline-block;
+	box-shadow: 0 1px 0 #cccccc;
+	box-sizing: unset;
+}
+
+#hello-admin-icon-current svg {
+	color: #23282d;
+	fill: #23282d;
+	
+}
+
+.hello-admin-icon-button {
+	width: auto;
+	display: inline-block;
+	vertical-align: top;
+	margin-left: -4px;
+	border-radius: 0 3px 3px 0;
+	height: 32px;
+	line-height: 28px;
+	padding: 0 10px 1px;
+}
+
+.hello-admin-icon-button:active {
+	transform: translateY(0);
+	box-shadow: inset 0 2px 5px -3px rgba( 0, 0, 0, 0.5 ), 0 1px 0 #cccccc;
+}
+
+#hello-admin-icon-select,
+#hello-admin-icon-close,
+#hello-admin-icon-choose:target {
+	display: none;
+}
+
+#hello-admin-icon-choose:target + #hello-admin-icon-close {
+	display: inline-block;
+}
+
+#hello-admin-icon-choose:target ~ #hello-admin-icon-select {
+	display: block;
+}
+
+.hello-admin-icon-select {
+	background: #f9f9f9;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	padding: 4px;
+	margin: 5px 0 0;
+	height: 110px;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	box-sizing: unset;
+}
+
+.hello-admin-icon-select .icon {
+	display: inline-block;
+	padding: 4px;
+	margin: 1px;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	cursor: pointer;
+	color: #72777c;
+	font-size: 25px;
+	width: 1em;
+	height: 1em;
+}
+
+.hello-admin-icon-select .icon:hover {
+	background: #fff;
+	border: 1px solid #aaa;
+	color: #444;
+}
+
+.hello-admin-icon-select .icon.selected,
+.hello-admin-icon-select .icon.selected:hover {
+	border: 1px solid rgba(0, 160, 210, 1);
+	color: rgba(0, 160, 210, 1);
+	fill: rgba(0, 160, 210, 1);
+}
+
+.hello-admin-icon-select .icon svg {
+	vertical-align: top;
+}

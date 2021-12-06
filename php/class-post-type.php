@@ -40,6 +40,13 @@ class Post_Type {
 	public $parent_menu_key = 'parent_menu';
 
 	/**
+	 * Menu icon meta key.
+	 *
+	 * @var string
+	 */
+	public $menu_icon_key = 'menu_icon';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -161,6 +168,16 @@ class Post_Type {
 				'single'         => true,
 				'show_in_rest'   => true,
 				'default'        => 0,
+			]
+		);
+
+		register_meta(
+			'post',
+			'menu_icon',
+			[
+				'object_subtype' => $this->slug,
+				'single'         => true,
+				'show_in_rest'   => true,
 			]
 		);
 	}

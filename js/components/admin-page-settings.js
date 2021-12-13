@@ -3,14 +3,14 @@
  */
 const { __ } = wp.i18n;
 const { PluginDocumentSettingPanel } = wp.editPost;
-const { PanelRow } = wp.components;
+const { PanelRow, BaseControl } = wp.components;
 const { useSelect } = wp.data;
 const { useState } = wp.element;
 const apiFetch = wp.apiFetch;
 
 const icon = 'editor-ul';
 
-import { MetaTextControl, MetaSelectControl, MetaToggleControl } from '.';
+import { MetaTextControl, MetaSelectControl, MetaToggleControl, MetaCheckboxControl } from '.';
 
 const AdminPageSettings = function() {
 	const { postMeta } = useSelect( ( select ) => {
@@ -20,14 +20,16 @@ const AdminPageSettings = function() {
 	} );
 
 	const [ state, setState ] = useState( {
-		loading: true,
+		loadingMenuItems: true,
 		menuItems: [
 			{ value: -1, label: __( 'Select Parent Menu', 'hello-admin' ) },
 			{ value: -1, label: __( 'Loading…', 'hello-admin' ), disabled: true },
 		],
+		userRoles: [],
+		loadingUserRoles: true,
 	} );
 
-	if ( state.loading ) {
+	if ( state.loadingMenuItems ) {
 		apiFetch( { path: '/hello-admin/v1/menus' } ).then( ( { success, data } ) => {
 			if ( success ) {
 				const menuItems = [ state.menuItems[ 0 ] ];
@@ -44,8 +46,30 @@ const AdminPageSettings = function() {
 					menuItems.push( { value: id, label } );
 				}
 				setState( {
-					loading: false,
 					menuItems,
+					loadingMenuItems: false,
+					userRoles: state.userRoles,
+					loadingUserRoles: state.loadingUserRoles,
+				} );
+			}
+		} );
+	}
+
+	if ( state.loadingUserRoles ) {
+		apiFetch( { path: '/hello-admin/v1/user-roles' } ).then( ( { success, data } ) => {
+			if ( success ) {
+				const userRoles = [];
+
+				const keys = Object.keys( data );
+
+				keys.forEach( ( key ) => {
+					userRoles.push( { value: key, label: data[ key ].name } );
+				} );
+				setState( {
+					userRoles,
+					loadingUserRoles: false,
+					menuItems: state.menuItems,
+					loadingMenuItems: state.loadingMenuItems,
 				} );
 			}
 		} );
@@ -64,24 +88,19 @@ const AdminPageSettings = function() {
 					metaKey="menu_position"
 				/>
 			</PanelRow>
-			<PanelRow>
-				<div className="hello-admin-select-multiple">
-					<MetaSelectControl
+			<BaseControl
+				label={ __( 'Select User Roles', 'hello-labs' ) }
+				id="hello-admin-user-roles"
+				className="hello-admin-user-roles-label"
+			>
+				<div id="hello-admin-user-roles">
+					<MetaCheckboxControl
 						label={ __( 'User Roles', 'hello-admin' ) }
 						metaKey="user_roles"
-						help="Choose which user roles should see this admin page"
-						multiple={ true }
-						options={ [
-							{ value: null, label: __( 'Select User Roles', 'hello-admin' ), disabled: true },
-							{ value: 'administrator', label: __( 'Administrator', 'hello-admin' ) },
-							{ value: 'editor', label: __( 'Editor', 'hello-admin' ) },
-							{ value: 'author', label: __( 'Author', 'hello-admin' ) },
-							{ value: 'contributor', label: __( 'Contributor', 'hello-admin' ) },
-							{ value: 'subscriber', label: __( 'Subscriber', 'hello-admin' ) },
-						] }
+						options={ state.userRoles }
 					/>
 				</div>
-			</PanelRow>
+			</BaseControl>
 			<PanelRow>
 				<MetaToggleControl
 					label={ __( 'Sub-Menu', 'hello-admin' ) }

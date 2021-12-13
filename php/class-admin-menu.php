@@ -26,6 +26,13 @@ class Admin_Menu {
 	const MENU_OPTION_KEY = 'hello-admin-all-menu-items';
 
 	/**
+	 * The option key used to save all menu items into a transient.
+	 *
+	 * @var string
+	 */
+	const USER_ROLES_OPTION_KEY = 'hello-admin-all-user-roles';
+
+	/**
 	 * Plugin constructor.
 	 */
 	public function __construct() {
@@ -41,6 +48,7 @@ class Admin_Menu {
 		add_action( 'admin_menu', [ $this, 'register_menu_items' ] );
 		add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_assets' ] );
 		add_action( 'admin_menu', [ $this, 'save_all_menu_items' ], 99 );
+		add_action( 'admin_menu', [ $this, 'save_all_user_roles' ], 99 );
 	}
 
 	/**
@@ -137,6 +145,14 @@ class Admin_Menu {
 	public function save_all_menu_items() {
 		global $menu;
 		set_transient( self::MENU_OPTION_KEY, $menu );
+	}
+
+	/**
+	 * Add all registered user roles to transient.
+	 */
+	public function save_all_user_roles() {
+		$user_roles = get_editable_roles();
+		set_transient( self::USER_ROLES_OPTION_KEY, $user_roles );
 	}
 
 	/**

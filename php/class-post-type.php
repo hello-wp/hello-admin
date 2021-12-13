@@ -83,6 +83,15 @@ class Post_Type {
 				'callback' => [ $this, 'return_all_registered_menus' ],
 			]
 		);
+
+		register_rest_route(
+			'hello-admin/v1',
+			'/user-roles',
+			[
+				'methods'  => 'GET',
+				'callback' => [ $this, 'get_registed_user_roles' ],
+			]
+		);
 	}
 
 	/**
@@ -93,6 +102,16 @@ class Post_Type {
 	public function return_all_registered_menus(): ?string {
 		$menu = (array) get_transient( hello_admin()->admin_menu::MENU_OPTION_KEY );
 		return wp_send_json_success( $menu );
+	}
+
+	/**
+	 * Return all registered users roles
+	 *
+	 * @return string All user roles as JSON.
+	 */
+	public function get_registed_user_roles(): ?string {
+		$user_roles = (array) get_transient( hello_admin()->admin_menu::USER_ROLES_OPTION_KEY );
+		return wp_send_json_success( $user_roles );
 	}
 
 	/**

@@ -118,4 +118,14 @@
 .hello-admin-select-multiple select[multiple] {  
 	height: auto !important;
 	padding: 8px;
-} 
+}
+
+#hello-admin-user-roles {
+	.components-checkbox-control {
+		margin-bottom: 12px;
+	}
+}
+
+.hello-admin-user-roles-label {
+	padding-top: 15px;
+}
